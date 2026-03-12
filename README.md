@@ -70,6 +70,7 @@ bool update_opinions()
 {
     // (5) For each node, calculate the majority opinion among its neighbours and update the node's opinion.
     // Return true if any node's opinion changed, false otherwise.
+    // NOTE: It was chosen to update the opinions simultaneously after all updates to opinions were calculated (based on unchanged opinions)
     
 }
 ```
