@@ -112,11 +112,15 @@ int main() {
     /// (6)  //////////////////////////////////////////////
 
     if (calculate_fraction_of_ones() == 1.0 || calculate_fraction_of_ones() == 0.0) {
-        opinions_changed = false; // 
+        opinions_changed = false; // skip loop
     }
-    while(opinions_changed && iteration < max_iterations) {
-        iteration++;
+
+    while(iteration < max_iterations) {
         opinions_changed = update_opinions();
+        if (!opinions_changed) {
+            break; // stop if no opinions changed
+        }
+        iteration++;
         cout << opinions_changed << endl;
         cout << "Iteration " << iteration << ": fraction of 1's = " 
              << calculate_fraction_of_ones() << endl;
