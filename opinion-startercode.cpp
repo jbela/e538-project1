@@ -29,7 +29,7 @@ void build_adj_matrix()
     adj = std::vector<std::vector<int>>(total_nodes, std::vector<int>(total_nodes, 0));
 
     for(int i = 0; i < edge_list.size(); i++) { // iterate through edge list
-        int source = edge_list[i][0]; //get 2 nodes
+        int source = edge_list[i][0]; //get nodes
         int target = edge_list[i][1];
         adj[source][target] = 1; // directed edge from src to tgt
     }
@@ -71,7 +71,7 @@ int get_majority_friend_opinions(int node)
 // Calculate new opinions for all voters and return if anyone's opinion changed
 bool update_opinions()
 {
-    // It was chosen that all opinions will be updated simultaneously based on the previous iteration's opinions. 
+    // All opinions will be updated simultaneously based on the previous iteration's opinions. 
     bool changed = false;
     vector<int> updated_opinions = opinions; //  to hold updated opinions while we calc them
 
@@ -120,7 +120,6 @@ int main() {
             break; // stop if no opinions changed
         }
         iteration++;
-        cout << opinions_changed << endl;
         cout << "Iteration " << iteration << ": fraction of 1's = " 
              << calculate_fraction_of_ones() << endl;
     }
