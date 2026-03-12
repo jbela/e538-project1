@@ -79,7 +79,6 @@ bool update_opinions()
         int majority = get_majority_friend_opinions(i);
         if(majority != opinions[i]) {
             updated_opinions[i] = majority; // update new opinion
-            // opinions[i] = majority; // immediately update new opinion
             changed = true;
         }
     }
