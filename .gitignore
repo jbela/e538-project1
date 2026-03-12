@@ -3,3 +3,10 @@
 
 # ignore VS Code workspace settings folder
 .vscode/
+
+#executable files
+*.out
+*.o
+*.so
+*.exe
+*.dll
