@@ -18,32 +18,31 @@ int total_nodes = 0; // We keep track of the total number of nodes based on larg
 // simple vector to hold each node's opinion (0 or 1)
 std::vector<int> opinions;
 
-// global adjacency matrix initialized later
+// use more standard graph implementation - adj list instead of graph
 std::vector<std::vector<int>> adj;
 
 // edge list: each row contains {source, target}
 std::vector<std::vector<int>> edge_list;
 
-void build_adj_matrix()
+void build_adj_list()
 {
-    adj = std::vector<std::vector<int>>(total_nodes, std::vector<int>(total_nodes, 0));
-
+    adj.resize(total_nodes);
     for(int i = 0; i < edge_list.size(); i++) { // iterate through edge list
         int source = edge_list[i][0]; //get nodes
         int target = edge_list[i][1];
-        adj[source][target] = 1; // directed edge from src to tgt
+        adj[target].push_back(source); // src to tgt
     }
 }
 
 double calculate_fraction_of_ones()
 {
-    int count = 0;
+    double count = 0;
     for(int i = 0; i < opinions.size(); i++) { // iterate through opinions vector
         if(opinions[i] == 1) {
             count++; // add to count if opinion is 1
         }
     }
-    return (double)count / total_nodes; // return fraction
+    return count / total_nodes; // return fraction
 }
 
 // For a given node, count majority opinion among its neighbours. Tie -> 0.
@@ -51,13 +50,11 @@ int get_majority_friend_opinions(int node)
 {
     int count_one = 0;
     int count_zero = 0;
-    for(int i = 0; i < total_nodes; i++) { // iterate through the node's neightbors
-        if(adj[i][node] == 1) { // if neighbor
-            if(opinions[i] == 1) {  // increase counts
-                count_one++;
-            } else {
-                count_zero++;
-            }
+    for(int i = 0; i < adj[node].size(); i++) { // iterate through the node's neightbors
+        if(opinions[adj[node][i]] == 1) {  // increase counts
+            count_one++;
+        } else {
+            count_zero++;
         }
     }
 
@@ -73,12 +70,11 @@ bool update_opinions()
 {
     // All opinions will be updated simultaneously based on the previous iteration's opinions. 
     bool changed = false;
-    vector<int> updated_opinions = opinions; //  to hold updated opinions while we calc them
+    vector<int> updated_opinions(total_nodes); //  to hold updated opinions while we calc them - size of total nodes
 
     for(int i = 0; i < total_nodes; i++) {
-        int majority = get_majority_friend_opinions(i);
-        if(majority != opinions[i]) {
-            updated_opinions[i] = majority; // update new opinion
+        updated_opinions[i] = get_majority_friend_opinions(i);
+        if(updated_opinions[i] != opinions[i]) {
             changed = true;
         }
     }
@@ -94,8 +90,8 @@ int main() {
     read_opinions("opinions.txt"); 
     read_edges("edge_list.txt");
 
-    // convert edge list into adjacency matrix once we know total_nodes
-    build_adj_matrix();
+    // convert edge list into adjacency LIST once we know total_nodes
+    build_adj_list();
     
     cout << "Total nodes: " << total_nodes << endl;
     
@@ -114,14 +110,14 @@ int main() {
         opinions_changed = false; // skip loop
     }
 
-    while(iteration < max_iterations) {
+    while(iteration < max_iterations && opinions_changed) {
         opinions_changed = update_opinions();
         if (!opinions_changed) {
             break; // stop if no opinions changed
         }
         iteration++;
         cout << "Iteration " << iteration << ": fraction of 1's = " 
-             << calculate_fraction_of_ones() << endl;
+             << calculate_fraction_of_ones() << endl; // maybe don't print for every step for large graphs.
     }
     
     ////////////////////////////////////////////////////////
