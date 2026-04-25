@@ -45,9 +45,9 @@ Consensus reached: all 0’s
 Your task is to clone this repo and complete the startercode and complete the following:
 
 ```
-void build_adj_matrix()
+void build_adj_list()
 {
-    // (1) allocate matrix adj of appropriate size
+    // (1) allocate  adj of appropriate size
 
 
     // (2) run through edge list and populate adj
